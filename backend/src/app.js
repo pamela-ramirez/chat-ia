@@ -1,0 +1,28 @@
+//importamos Express
+const express = require("express");
+
+//creamos nuestra aplicación
+const app = express();
+
+const PORT = 3000;
+
+//le dice a Express que pueda recibir información en formato JSON
+app.use(express.json());
+/* Por ejemplo, si recibimos un POST con el siguiente cuerpo:
+{
+    "message": "¿Qué es JavaScript?"
+} 
+el backend podrá leerlo
+*/
+
+// Ruta inicial
+app.get("/", (req, res) => {
+    res.json({
+        message: "Backend Chat IA funcionando"
+    });
+});
+
+// Iniciar servidor
+app.listen(PORT, () => {
+    console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+});
