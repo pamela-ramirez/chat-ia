@@ -1,5 +1,6 @@
 //importamos Express
 const express = require("express");
+const cors = require("cors");
 
 //importamos las rutas del chat
 const chatRoutes = require("./routes/chat.routes");
@@ -8,6 +9,9 @@ const chatRoutes = require("./routes/chat.routes");
 const app = express();
 
 const PORT = 3000;
+
+// Permitir peticiones desde el frontend- Configuración de CORS
+app.use(cors());
 
 //le dice a Express que pueda recibir información en formato JSON
 app.use(express.json());
