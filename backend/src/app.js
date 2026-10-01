@@ -1,6 +1,9 @@
 //importamos Express
 const express = require("express");
 
+//importamos las rutas del chat
+const chatRoutes = require("./routes/chat.routes");
+
 //creamos nuestra aplicación
 const app = express();
 
@@ -14,6 +17,9 @@ app.use(express.json());
 } 
 el backend podrá leerlo
 */
+
+// Rutas
+app.use("/api/chat", chatRoutes);
 
 // Ruta inicial
 app.get("/", (req, res) => {
