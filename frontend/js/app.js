@@ -1,4 +1,3 @@
-
 const chatForm = document.getElementById("chat-form");
 const messageInput = document.getElementById("message-input");
 const messagesContainer = document.getElementById("messages");
@@ -25,21 +24,73 @@ function addMessage(text, sender) {
         messagesContainer.scrollHeight;
 }
 
+// Enviar mensaje al backend
+async function sendMessage(message) {
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3000/api/chat",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    message: message
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        console.log("Respuesta del backend:", data);
+
+        if (data.success) {
+
+            addMessage(
+                data.userMessage,
+                "assistant"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Error al comunicarse con el backend:",
+            error
+        );
+
+        addMessage(
+            "No se pudo conectar con el servidor.",
+            "assistant"
+        );
+    }
+}
+
 // Envío del formulario
-chatForm.addEventListener("submit", (event) => {
+chatForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const text = messageInput.value.trim();
 
     if (!text) return;
 
+    // Mostrar inmediatamente el mensaje del usuario
     addMessage(text, "user");
 
+    // Limpiar input
     messageInput.value = "";
     messageInput.focus();
+
+     // Enviar al backend
+    await sendMessage(text);
 });
 
-// Crear una nueva conversación visual
+// Nuevo chat
 newChatButton.addEventListener("click", () => {
     messagesContainer.innerHTML = `
         <div class="welcome">
