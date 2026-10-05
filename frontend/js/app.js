@@ -48,14 +48,11 @@ async function sendMessage(message) {
 
         console.log("Respuesta del backend:", data);
 
-        if (data.success) {
-
-            addMessage(
-                data.userMessage,
-                "assistant"
-            );
-
+       if (!response.ok || !data.success) {
+            throw new Error(data.message || "Error del servidor");
         }
+
+        addMessage(data.response, "assistant");
 
     } catch (error) {
 

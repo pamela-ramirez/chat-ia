@@ -1,20 +1,56 @@
-//importamos Express
 const express = require("express");
+/* const { generateResponse } =
+  require("../services/gemini.service"); */
+  const { generateResponse, listModels } =
+  require("../services/gemini.service");
 
-const router = express.Router(); // Creamos un enrutador de Express
+const router = express.Router();
 
-// Ruta para manejar los mensajes del chat
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+    try {
+        const { message } = req.body;
 
-    const { message } = req.body;
+        if (!message || !message.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "El mensaje no puede estar vacío."
+            });
+        }
 
-    console.log("Mensaje recibido:", message);
+        const response = await generateResponse(message);
 
-    res.json({
-        success: true,
-        message: "Mensaje recibido correctamente",
-        userMessage: message
-    });
+        res.json({
+            success: true,
+            response
+        });
+
+    } catch (error) {
+        console.error("Error al consultar Gemini:", error.message);
+
+        res.status(500).json({
+            success: false,
+            message: "No se pudo obtener una respuesta de la IA."
+        });
+    }
 });
 
-module.exports = router;    
+
+router.get("/models", async (req, res) => {
+  try {
+    await listModels();
+
+    res.json({
+      success: true,
+      message: "Modelos mostrados en la consola."
+    });
+  } catch (error) {
+    console.error("Error al listar modelos:", error.message);
+
+    res.status(500).json({
+      success: false,
+      message: "No se pudieron obtener los modelos."
+    });
+  }
+});
+
+module.exports = router;

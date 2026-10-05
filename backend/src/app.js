@@ -1,3 +1,4 @@
+require("dotenv").config();
 //importamos Express
 const express = require("express");
 const cors = require("cors");
